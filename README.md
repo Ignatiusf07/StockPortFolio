@@ -203,8 +203,8 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Contact
 
 - Project Link: [https://github.com/Ignatiusf07/StockPortFolio](https://github.com/Ignatiusf07/StockPortFolio)
-- Developer: Ignatius Francis
-- Email: ignatiusf07@gmail.com
+- Developer: Ignatius Pinto F
+- Email: ignatiuspinto95@gmail.com
 
 ## Version History
 
