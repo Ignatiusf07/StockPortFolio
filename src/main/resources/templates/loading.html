@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading - Stock Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #333;
+            --light-text: #666;
+            --white: #ffffff;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            left: 80%;
+            animation-delay: -2s;
+        }
+
+        .shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 80%;
+            left: 20%;
+            animation-delay: -4s;
+        }
+
+        .shape:nth-child(4) {
+            width: 120px;
+            height: 120px;
+            top: 30%;
+            left: 70%;
+            animation-delay: -6s;
+        }
+
+        .shape:nth-child(5) {
+            width: 60px;
+            height: 60px;
+            top: 70%;
+            left: 40%;
+            animation-delay: -8s;
+        }
+
+        .shape:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            top: 40%;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            25% {
+                transform: translate(50px, 50px) rotate(90deg);
+            }
+
+            50% {
+                transform: translate(0, 100px) rotate(180deg);
+            }
+
+            75% {
+                transform: translate(-50px, 50px) rotate(270deg);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        /* Animated Grid Lines */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 50px 50px,
+                linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(50px);
+            }
+        }
+
+        /* Glowing Orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.3;
+            animation: glowPulse 4s ease-in-out infinite;
+        }
+
+        .glow-orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-color);
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .glow-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: var(--secondary-color);
+            bottom: -200px;
+            right: -200px;
+            animation-delay: -2s;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.4;
+            }
+        }
+
+        .loading-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .loading-title {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .loading-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .loading-spinner-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 30px auto;
+        }
+
+        .loading-spinner {
+            width: 100%;
+            height: 100%;
+            border: 5px solid rgba(102, 126, 234, 0.1);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 5px solid rgba(118, 75, 162, 0.1);
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 2s linear infinite reverse;
+        }
+
+        .loading-progress {
+            width: 100%;
+            height: 6px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 3px;
+            margin: 30px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loading-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            animation: progress 5s ease-in-out forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading-progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            animation: shimmer 1.5s infinite;
+        }
+
+        .loading-text {
+            color: var(--light-text);
+            margin-top: 20px;
+            font-size: 1.1rem;
+            animation: fadeIn 0.5s ease-out 0.5s both;
+        }
+
+        .loading-steps {
+            margin-top: 30px;
+            text-align: left;
+            padding: 0 20px;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideIn 0.5s ease-out forwards;
+        }
+
+        .loading-step:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-step:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .loading-step:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        .loading-step:nth-child(4) {
+            animation-delay: 0.8s;
+        }
+
+        .loading-step:nth-child(5) {
+            animation-delay: 1.0s;
+        }
+
+        .loading-step i {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .loading-step.completed i {
+            color: #28a745;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .loading-container {
+                padding: 30px 20px;
+            }
+
+            .loading-title {
+                font-size: 1.8rem;
+            }
+
+            .loading-spinner-container {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Elements -->
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="grid-lines"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+
+    <!-- Main Content -->
+    <div class="loading-container">
+        <h1 class="loading-title">Loading Stock Portfolio</h1>
+
+        <div class="loading-spinner-container">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <div class="loading-progress">
+            <div class="loading-progress-bar"></div>
+        </div>
+
+        <p class="loading-text">Preparing your portfolio dashboard...</p>
+
+        <div class="loading-steps">
+            <div class="loading-step">
+                <i class="bi bi-database"></i>
+                <span>Loading market data...</span>
+            </div>
+            <div class="loading-step">
+                <i class="bi bi-graph-up"></i>
+                <span>Analyzing portfolio performance...</span>
+            </div>
+            <div class="loading-step">
+                <i class="bi bi-calculator"></i>
+                <span>Calculating returns and metrics...</span>
+            </div>
+            <div class="loading-step">
+                <i class="bi bi-pie-chart"></i>
+                <span>Generating portfolio analytics...</span>
+            </div>
+            <div class="loading-step">
+                <i class="bi bi-check-circle"></i>
+                <span>Finalizing dashboard...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update loading steps
+        const steps = document.querySelectorAll('.loading-step');
+        let currentStep = 0;
+
+        function updateSteps() {
+            if (currentStep < steps.length) {
+                steps[currentStep].classList.add('completed');
+                currentStep++;
+                setTimeout(updateSteps, 800); // Increased delay between steps
+            }
+        }
+
+        // Start updating steps
+        setTimeout(updateSteps, 1000);
+
+        // Redirect to dashboard after loading
+        setTimeout(() => {
+            window.location.href = '/dashboard';
+        }, 6000); // Increased total loading time to 6 seconds
+    </script>
+</body>
+
+</html>

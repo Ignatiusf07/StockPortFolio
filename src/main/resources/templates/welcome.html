@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - Stock Portfolio</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --text-color: #333;
+            --light-text: #666;
+            --white: #ffffff;
+            --shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Elements */
+        .background-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite;
+        }
+
+        .shape:nth-child(1) {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            left: 85%;
+            animation-delay: -3s;
+        }
+
+        .shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 70%;
+            left: 15%;
+            animation-delay: -6s;
+        }
+
+        .shape:nth-child(4) {
+            width: 180px;
+            height: 180px;
+            top: 20%;
+            left: 75%;
+            animation-delay: -9s;
+        }
+
+        .shape:nth-child(5) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            left: 25%;
+            animation-delay: -12s;
+        }
+
+        .shape:nth-child(6) {
+            width: 160px;
+            height: 160px;
+            top: 30%;
+            left: 45%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+            }
+
+            25% {
+                transform: translate(100px, 50px) rotate(90deg) scale(1.1);
+            }
+
+            50% {
+                transform: translate(50px, 100px) rotate(180deg) scale(1);
+            }
+
+            75% {
+                transform: translate(-50px, 50px) rotate(270deg) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0, 0) rotate(360deg) scale(1);
+            }
+        }
+
+        /* Animated Grid Lines */
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 60px 60px,
+                linear-gradient(0deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0 0 / 60px 60px;
+            animation: gridMove 30s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% {
+                transform: translateY(0) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(60px) rotate(1deg);
+            }
+        }
+
+        /* Glowing Orbs */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.2;
+            animation: glowPulse 6s ease-in-out infinite;
+        }
+
+        .glow-orb:nth-child(1) {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-color);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .glow-orb:nth-child(2) {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary-color);
+            bottom: -250px;
+            right: -250px;
+            animation-delay: -3s;
+        }
+
+        .glow-orb:nth-child(3) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-color);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -6s;
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.2;
+            }
+
+            50% {
+                transform: scale(1.3);
+                opacity: 0.3;
+            }
+        }
+
+        /* Particle Effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: particleFloat 15s infinite;
+        }
+
+        .particle:nth-child(1) {
+            width: 3px;
+            height: 3px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .particle:nth-child(2) {
+            width: 2px;
+            height: 2px;
+            top: 40%;
+            left: 30%;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3) {
+            width: 4px;
+            height: 4px;
+            top: 60%;
+            left: 50%;
+            animation-delay: -4s;
+        }
+
+        .particle:nth-child(4) {
+            width: 3px;
+            height: 3px;
+            top: 80%;
+            left: 70%;
+            animation-delay: -6s;
+        }
+
+        .particle:nth-child(5) {
+            width: 2px;
+            height: 2px;
+            top: 30%;
+            left: 90%;
+            animation-delay: -8s;
+        }
+
+        .particle:nth-child(6) {
+            width: 4px;
+            height: 4px;
+            top: 50%;
+            left: 20%;
+            animation-delay: -10s;
+        }
+
+        .particle:nth-child(7) {
+            width: 3px;
+            height: 3px;
+            top: 70%;
+            left: 40%;
+            animation-delay: -12s;
+        }
+
+        .particle:nth-child(8) {
+            width: 2px;
+            height: 2px;
+            top: 90%;
+            left: 60%;
+            animation-delay: -14s;
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(100px, -100px);
+                opacity: 0;
+            }
+        }
+
+        .welcome-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+        }
+
+        .welcome-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .welcome-title {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+            display: inline-block;
+        }
+
+        .welcome-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .welcome-subtitle {
+            color: var(--light-text);
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .enter-btn:hover::before {
+            opacity: 1;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .enter-btn:active {
+            transform: translateY(0);
+        }
+
+        .features {
+            margin-top: 40px;
+            text-align: left;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .feature-item {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-item i {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feature-item h4 {
+            color: var(--text-color);
+            margin: 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .feature-item p {
+            color: var(--light-text);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-container {
+                padding: 20px;
+            }
+
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Elements -->
+    <div class="background-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+    <div class="grid-lines"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="glow-orb"></div>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="welcome-container" data-aos="fade-up" data-aos-duration="1000">
+        <h1 class="welcome-title" data-aos="fade-down" data-aos-delay="200">Welcome to Stock Portfolio</h1>
+        <p class="welcome-subtitle" data-aos="fade-up" data-aos-delay="400">
+            Your comprehensive solution for managing and tracking your stock investments with real-time data and
+            advanced analytics
+        </p>
+
+        <button onclick="window.location.href='/loading'" class="enter-btn" data-aos="zoom-in" data-aos-delay="600">
+            <i class="bi bi-box-arrow-in-right"></i> Enter Application
+        </button>
+
+        <div class="features">
+            <div class="feature-item" data-aos="fade-right" data-aos-delay="800">
+                <i class="bi bi-graph-up"></i>
+                <h4>Real-time Tracking</h4>
+                <p>Monitor your portfolio with live market data and instant updates</p>
+            </div>
+            <div class="feature-item" data-aos="fade-up" data-aos-delay="1000">
+                <i class="bi bi-pie-chart"></i>
+                <h4>Portfolio Analytics</h4>
+                <p>Get detailed insights and analytics for better investment decisions</p>
+            </div>
+            <div class="feature-item" data-aos="fade-left" data-aos-delay="1200">
+                <i class="bi bi-wallet2"></i>
+                <h4>Investment Management</h4>
+                <p>Easily manage and track your investments in one place</p>
+            </div>
+            <div class="feature-item" data-aos="fade-right" data-aos-delay="1400">
+                <i class="bi bi-bar-chart"></i>
+                <h4>Performance Monitoring</h4>
+                <p>Track your portfolio's performance with detailed metrics</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AOS Animation Library -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            once: true,
+            disable: 'mobile'
+        });
+
+        // Add hover effect to feature items
+        document.querySelectorAll('.feature-item').forEach(item => {
+            item.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-5px)';
+            });
+            item.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+
+</html>
